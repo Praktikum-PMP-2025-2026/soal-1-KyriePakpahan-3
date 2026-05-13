@@ -34,13 +34,8 @@ Testcase Output
 ()()()
 TOTAL 5 
 */
-
-
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
-// fungsi untuk menghitung total banyaknya balanced bracket sequence yang mungkin dengan n pasang kurung buka dan tutup
 int total_balance_sequences (int n){
     // rumus catalan
     if (n == 0) {
@@ -54,28 +49,34 @@ int total_balance_sequences (int n){
     return total;
 }
 
-// fungsi untuk print hasil dari banyak bracket sequence yang mungkin dengan n pasang kurung buka dan tutup, dengan menggunakan backtracking untuk menghasilkan semua kemungkinan bracket sequence yang valid
-void print_balance_sequences (int n, int k){
-    char *str = (char *)malloc((2*n + 1) * sizeof(char));
-    str[2*n] = '\0'; // null-terminate the string
+void balance_sequences (int pos, int n, int open, int close);
 
-    void backtrack(int open, int close, int index) {
-        if (index == 2*n) {
-            printf("%s\n", str);
-            return;
+void print_balance_sequences (int n)
+{
+    if (n > 0)
+        balance_sequences (0, n, 0, 0);
+    return;
+}
+ 
+void balance_sequences (int pos, int n, int open, int close){
+    #define MAX_SIZE 100
+    static char str[MAX_SIZE];
+ 
+    if (close == n) {
+        printf("%s \n", str);
+        return;
+    }
+    else {
+        if (open > close) {
+            str[pos] = ')';
+            balance_sequences (pos + 1, n, open, close + 1);
         }
+ 
         if (open < n) {
-            str[index] = '(';
-            backtrack(open + 1, close, index + 1);
-        }
-        if (close < open) {
-            str[index] = ')';
-            backtrack(open, close + 1, index + 1);
+            str[pos] = '(';
+            balance_sequences (pos + 1, n, open + 1, close);
         }
     }
-
-    backtrack(0, 0, 0);
-    free(str);
 }
 
 int main (){
@@ -84,13 +85,15 @@ int main (){
     if (scanf("%d", &n) != 1){
         return 0;
     }
-    // print hasil dari banyak bracket sequence yang mungkin dengan n pasang kurung buka dan tutup
-    print_balance_sequences(n, 0);
-    // print total banyaknya balanced bracket sequence yang mungkin dengan n pasang kurung buka dan tutup
+    // print hasil
+    print_balance_sequences(n);
+
+    // print total
     printf("TOTAL %d\n", total_balance_sequences(n));
     return 0;
 }
 
 /*Reference 
-https://cp-algorithms.com/combinatorics/bracket_sequences.html 
+[1] https://cp-algorithms.com/combinatorics/bracket_sequences.html 
+[2] https://prepinsta.com/c-program/generate-all-combinations-of-balanced-parentheses/  
 */
