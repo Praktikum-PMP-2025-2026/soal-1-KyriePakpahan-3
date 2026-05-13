@@ -87,6 +87,7 @@ int main (){
     }
     // print hasil
     print_balance_sequences(n);
+    getchar();
 
     // print total
     printf("TOTAL %d\n", total_balance_sequences(n));
