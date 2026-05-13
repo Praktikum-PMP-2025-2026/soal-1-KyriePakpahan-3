@@ -49,34 +49,26 @@ int total_balance_sequences (int n){
     return total;
 }
 
-void balance_sequences (int pos, int n, int open, int close);
+void print_balance_sequences (int n){
+    char sequence[2*n + 1];
+    sequence[2*n] = '\0'; 
 
-void print_balance_sequences (int n)
-{
-    if (n > 0)
-        balance_sequences (0, n, 0, 0);
-    return;
-}
- 
-void balance_sequences (int pos, int n, int open, int close){
-    #define MAX_SIZE 100
-    static char str[MAX_SIZE];
- 
-    if (close == n) {
-        printf("%s\n", str);
-        return;
-    }
-    else {
-        if (open > close) {
-            str[pos] = ')';
-            balance_sequences (pos + 1, n, open, close + 1);
+    void backtrack(int open, int close) {
+        if (open == n && close == n) {
+            printf("%s\n", sequence);
+            return;
         }
- 
         if (open < n) {
-            str[pos] = '(';
-            balance_sequences (pos + 1, n, open + 1, close);
+            sequence[open + close] = '(';
+            backtrack(open + 1, close);
+        }
+        if (close < open) {
+            sequence[open + close] = ')';
+            backtrack(open, close + 1);
         }
     }
+
+    backtrack(0, 0);
 }
 
 int main (){
@@ -87,7 +79,6 @@ int main (){
     }
     // print hasil
     print_balance_sequences(n);
-    getchar();
 
     // print total
     printf("TOTAL %d\n", total_balance_sequences(n));
